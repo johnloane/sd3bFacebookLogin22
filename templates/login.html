@@ -1,0 +1,25 @@
+<html>
+	<head>
+
+		<title>Getting Sensors Online</title>
+		<script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.33.1.js"></script>
+		<script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.33.1.min.js"></script>
+		<script src="static/js/main.js"></script>
+		<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/facebookButton.css') }}">
+	</head>
+	<body>
+		<h1> This is SD3b <h1>
+
+		<h2> Login... </h2>
+			<button class="loginBtn loginBtn--facebook" onClick = "facebookLogin()">
+  				Login with Facebook
+			</button>
+		<a href="/facebook_login">Sign in with Facebook</a>
+
+
+		{% for message in get_flashed_messages() %}
+			{{message}}
+		{% endfor %}
+
+	</body>
+</html>
