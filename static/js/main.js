@@ -3,6 +3,8 @@ var heartbeatRate = 5000;
 
 var myChannel = "johns-pi-channel"
 
+sendEvent("get_auth_key")
+
 function sendEvent(value){
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = function(){
@@ -14,7 +16,7 @@ function sendEvent(value){
 			}
 		}
 	};
-	request.open("POST", "status="+value, true);
+	request.open("POST", value, true);
 	request.send(null);
 }
 

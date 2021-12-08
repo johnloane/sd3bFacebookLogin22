@@ -89,4 +89,24 @@ def get_all_logged_in_users():
         print(str(row[n].id) + ' | ' + row[n].name + ' | ' + str(row[n].user_id) + ' | ' + str(row[n].auth_key) + ' | ' + str(row[n].login))
     return online_user_record
 
+def add_user_permission(user_id, read, write):
+    row = get_user_row_if_exits(user_id)
+    if row != False:
+        row.read_access = read
+        row.write_access = write
+        db.session.commit()
+
+def add_auth_key(user_id, auth):
+    row = get_user_row_if_exits(user_id)
+    if row != False:
+        row.auth_key = auth
+        db.session.commit()
+
+def get_auth_key(user_id):
+    row = get_user_row_if_exits(user_id)
+    if row != False:
+        return row.auth_key
+    else:
+        print("User with ID: " + user_id + " doesn't exist")
+
 

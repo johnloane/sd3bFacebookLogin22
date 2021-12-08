@@ -1,3 +1,6 @@
+import hashlib
+import string
+
 from flask import Flask, render_template, session, url_for, redirect, flash
 from flask_dance.contrib.facebook import make_facebook_blueprint, facebook
 from functools import wraps
@@ -102,6 +105,32 @@ def keep_alive():
     data['keep_alive'] = keep_alive_count
     parsed_json = json.dumps(data)
     return str(parsed_json)
+
+@app.route('/grant-<who>-<key_or_id>-<read>-<write>', methods=['GET', 'POST'])
+def grant_access(who, key_or_id, read, write):
+    if int(session['user_id']) == 326681429269251:
+        print("Granting " + key_or_id + " read:"+read +", write:"+write+" permission")
+        my_db.add_user_permission(key_or_id, read, write)
+        auth_key = my_db.get_auth_key(key_or_id)
+        PB.grant_acess(auth_key, str_to_bool(read), str_to_bool(write))
+    else:
+        print("Non admin trying to grant privileges")
+        return json.dumps({"access" : "denied"})
+    return json.dumps({"access": "granted"})
+
+
+def salt(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+def create_auth_key():
+    s = salt(10)
+    hashing = hashlib.sha256(str(session['facebook_token']) + s)
+    return hashing.hexdigest()
+
+@app.route('/get_auth_key', methods=['GET', 'POST'])
+def get_auth_key():
+    print("Creating authkey for: " + session['user'])
+    auth_key = create_auth_key()
 
 
 if __name__ == '__main__':
