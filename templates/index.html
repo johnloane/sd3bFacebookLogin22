@@ -23,7 +23,7 @@
 					<span>{{user[0]}}</span>
 					<input type="checkbox" id="read-user-{{user[1]}}" {{user[2]}}>Read</input>
 					<input type="checkbox" id="write-user-{{user[1]}}" {{user[3]}}>Write</input>
-					<button id="access-user-{{user[1]}}" onClick = grantAccess()>Apply</button>
+					<button id="access-user-{{user[1]}}" onClick = grantAccess(this)>Apply</button>
 				</li>
 				{% endfor %}
 			</ul>

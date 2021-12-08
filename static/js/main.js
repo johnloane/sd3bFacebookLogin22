@@ -3,6 +3,21 @@ var heartbeatRate = 5000;
 
 var myChannel = "johns-pi-channel"
 
+function sendEvent(value){
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function(){
+		if(this.readyState === 4){
+			if(this.status === 200){
+				if(this.responseText !== null)
+				{
+				}
+			}
+		}
+	};
+	request.open("POST", "status="+value, true);
+	request.send(null);
+}
+
 function keepAlive()
 {
 	var request = new XMLHttpRequest();
@@ -138,5 +153,11 @@ function facebookLogin()
     location.replace("/facebook_login");
 }
 
-
+function grantAccess(ab)
+{
+    var userId = ab.id.split("-")[2];
+    var readState = document.getElementById("read-user-"+userId).checked;
+    var writeState = document.getElementById("write-user-"+userId).checked;
+    sendEvent("grant-user-"+userId+"-"+readState+"-"+writeState);
+}
 
