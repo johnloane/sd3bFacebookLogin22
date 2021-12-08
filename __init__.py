@@ -1,4 +1,3 @@
-#Something
 from flask import Flask, render_template, session, url_for, redirect, flash
 from flask_dance.contrib.facebook import make_facebook_blueprint, facebook
 from functools import wraps
@@ -36,6 +35,7 @@ data = {}
 def index():
     return render_template("login.html")
 
+
 @app.route('/facebook_login')
 def facebook_login():
     if not facebook.authorized:
@@ -54,6 +54,7 @@ def facebook_login():
     print("Account info is not ok")
     return redirect(url_for('login'))
 
+
 def login_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
@@ -65,13 +66,14 @@ def login_required(f):
         return redirect(url_for('login'))
     return wrapper
 
+
 @app.route('/main')
 @login_required
 def main():
     flash(session['user'])
     my_db.add_user_and_login(session['user'], int(session['user_id']))
     my_db.view_all()
-    return render_template("index.html")
+    return render_template("index.html", user_id=session['user_id'], online_users = my_db.get_all_logged_in_users())
 
 def clear_user_session():
     session['facebook_token'] = None

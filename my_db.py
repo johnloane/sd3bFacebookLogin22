@@ -74,8 +74,19 @@ def view_all():
 
 def get_all_logged_in_users():
     row = user_table.query.filter_by(login=1).all()
+    online_user_record = {"user_record": []}
     print("Logged in users: ")
     for n in range(0, len(row)):
+        if row[n].read_access:
+            read = "checked"
+        else:
+            read = "unchecked"
+        if row[n].write_access:
+            write = "checked"
+        else:
+            write = "unchecked"
+        online_user_record["user_record"].append([row[n].name, row[n].user_id, read, write])
         print(str(row[n].id) + ' | ' + row[n].name + ' | ' + str(row[n].user_id) + ' | ' + str(row[n].auth_key) + ' | ' + str(row[n].login))
+    return online_user_record
 
 

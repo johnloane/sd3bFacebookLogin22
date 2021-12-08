@@ -15,6 +15,20 @@
 			<input type="checkbox" id="buzzer" onclick="handleClick(this);"/>
 			<label for = "Buzzer_On">Buzzer On</label>
 		</div>
+		{% if user_id == '326681429269251'%}
+		<div>
+			<ul>
+				{% for user in online_users["user_record"] %}
+				<li>
+					<span>{{user[0]}}</span>
+					<input type="checkbox" id="read-user-{{user[1]}}" {{user[2]}}>Read</input>
+					<input type="checkbox" id="write-user-{{user[1]}}" {{user[3]}}>Write</input>
+					<button id="access-user-{{user[1]}}" onClick = grantAccess()>Apply</button>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+		{% endif %}
 		{% for message in get_flashed_messages() %}
 			{{message}}
 		{%endfor%}
