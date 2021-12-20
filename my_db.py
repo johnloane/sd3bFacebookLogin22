@@ -89,11 +89,19 @@ def get_all_logged_in_users():
         print(str(row[n].id) + ' | ' + row[n].name + ' | ' + str(row[n].user_id) + ' | ' + str(row[n].auth_key) + ' | ' + str(row[n].login))
     return online_user_record
 
+def bool_to_int(v):
+    if 'true' in str(v):
+        return 1
+    elif 'false' in str(v):
+        return 0
+    else:
+        raise ValueError
+
 def add_user_permission(user_id, read, write):
     row = get_user_row_if_exits(user_id)
     if row != False:
-        row.read_access = read
-        row.write_access = write
+        row.read_access = bool_to_int(read)
+        row.write_access = bool_to_int(write)
         db.session.commit()
 
 def add_auth_key(user_id, auth):
@@ -108,5 +116,21 @@ def get_auth_key(user_id):
         return row.auth_key
     else:
         print("User with ID: " + user_id + " doesn't exist")
+
+def get_user_access(user_id):
+    row = get_user_row_if_exits(user_id)
+    if row != False:
+        get_user_row = user_table.query.filter_by(user_id=user_id).first()
+        read = get_user_row.read_access
+        if read == 1:
+            read = True
+        else:
+            read = False
+        write = get_user_row.write_access
+        if write == 1:
+            write = True
+        else:
+            write = False
+    return read, write
 
 

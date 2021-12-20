@@ -3,7 +3,7 @@ var heartbeatRate = 5000;
 
 var myChannel = "johns-pi-channel"
 
-sendEvent("get_auth_key")
+sendEvent("get_auth_key");
 
 function sendEvent(value){
 	var request = new XMLHttpRequest();
@@ -12,6 +12,22 @@ function sendEvent(value){
 			if(this.status === 200){
 				if(this.responseText !== null)
 				{
+				    try{
+				        var json_data = this.responseText;
+				        var json_obj = JSON.parse(json_data);
+				        if(json_obj.hasOwnProperty('auth_key'))
+				        {
+				            pubnub.setAuthKey(json_obj.auth_key);
+				            console.log(json_obj.auth_key);
+				            pubnub.setCipherKey(json_obj.cipher_key);
+				            console.log(json_obj.cipher_key);
+				            console.log("Auth key and cipherkey set " + this.responseText);
+				            subscribe();
+				        }
+				    }
+				    catch(e){
+				        console.log("Can't extract json: " + this.responseText + e);
+				    }
 				}
 			}
 		}
@@ -79,8 +95,8 @@ pubnub.addListener({
             }
         },
         message: function(msg) {
-            console.log(msg.message.title);
-            console.log(msg.message.description);
+            console.log(msg.message);
+            document.getElementById("Motion_id").innerHTML = msg.message.motion;
         },
         presence: function(presenceEvent) {
             // This is where you handle presence. Not important for now :)
@@ -122,6 +138,21 @@ function handleClick(cb)
 }
 
 pubnub.subscribe({channels: [myChannel]})
+
+function subscribe(){
+    pubnub.subscribe({channels: [myChannel],
+    },
+    function(status, response){
+        if(status.error){
+            console.log("Subscribe failed ", status)
+        }
+        else
+        {
+            console.log("Subscribe success", status)
+        }
+    }
+    );
+}
 
 function publishUpdate(data, channel)
 {
